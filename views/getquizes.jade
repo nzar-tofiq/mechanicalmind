@@ -1,0 +1,13 @@
+extends layout
+block page
+  - var menu = 'getquizes'
+block content
+  h2 choose a Quiz
+  div= err
+  if (!quizes || quizes.length < 1)
+    p There are no Experiments
+  else
+    ul
+      each quiz in quizes
+        li
+          a(href="#{quiz.slug}")= quiz.title

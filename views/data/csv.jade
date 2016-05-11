@@ -1,0 +1,9 @@
+extends ../layout
+block page
+  - var menu = 'json'
+block content
+  div= err
+    if (!data || data < 0)
+      p Nothing to display
+    else
+      p= data

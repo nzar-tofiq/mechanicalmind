@@ -1,0 +1,15 @@
+- All is based on ripping data out of the flash experiment given by Andrew Blake
+
+- Experiment configured as in "experiment" folder, iuncluding correctly numbered and cropped images
+- Folder "existing" contains the original screenshots from a walkthrough of the flash app, also has the text file output
+- Folder "export" contains a "|" delineated output that an experimenter might be able to get from the system
+- - Uses "|" instead of "," in case the solution etc. uses a comma (","). "|" is less likely to appear in the tasks
+
+- participant ID and experiment ID are automatically populat4ed into the system so does not need to be explicitly defined in the experiment
+
+- Images are named after their index number in the respective tasks array
+- - Alternatively could use an explicit task id?
+- Images are all 800x800 png files
+- Images have a white background
+
+- Questions asking for number of people in a certain set does not need to then ask for the people's names. Keep it simple.

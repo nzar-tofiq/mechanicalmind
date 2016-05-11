@@ -1,0 +1,37 @@
+extends ../layout
+block page
+  - var menu = 'task'
+block content
+  if(!task || !quiz || !num)
+    div.err= err
+  else
+    style quiz.style
+    div.container#container
+      div.row
+        div.col-sm-8#img
+          img(src="#{task.img}")
+        div.col-sm-4#question
+          h2= task.text
+          div.list-group#responses
+            each response, index in task.responses
+              a.list-group-item.btn-block#response(href="/exp/#{quiz.slug}/task/#{num}/response/#{index}")= response
+          h3.timer
+    script.
+      var timeout = #{quiz.timeout};
+      var timing = #{quiz.timeout};
+      if(#{quiz.show_timer}){
+        var timer = setInterval(function() {
+          if (timeout > 0) {
+            timeout = timeout - 1000;
+            $('.timer').html('Seconds remaining: ' + timeout/1000);
+          } else {
+            $('.timer').html('You\'re out of time');
+          }
+        }, 1000);
+      }
+      function redirect() {
+        clearInterval(timer);
+        window.location.href = '/exp/#{quiz.slug}/task/#{num}/response/timedout';
+      }
+      setTimeout(redirect, timing);
+    

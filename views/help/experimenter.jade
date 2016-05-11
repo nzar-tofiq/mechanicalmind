@@ -1,0 +1,32 @@
+extends ../layout
+
+block page
+  - var menu = 'help'
+block content
+  h1 Experimenter Help
+  p Experiments cannot be modified or updated, as this will affect the integrity of the collected data.
+  p Deleting an experiment deletes all data associated with it.
+  h2 To create an experiment
+  ol
+    li Click on Create
+    li Provide the tool with information about where to get the data from (data for images and experiment settings).
+      p &quot;slug&quot; does not have a role in the experiment&apos;s lifetime,
+        | it only provides MechanicalMind and us, with a communicative method to show which 
+        | experiment is currently in view,
+        | slugs are preferably unique, but they don&apos;t have to be.
+    li Only &quot;slug&quot; is madatory in step 2, if data is not provided then,
+      | the experiment can be created by manually filling in the following forms.
+    li The next page sets the general settings for the experiment like (where to find images, randomize, showtimer etc.).
+    li When the general experiment settings posted, then the process of checking each task begins, and it only finishes when all tasks are filled completed,
+      | there is no option to skip checking tasks.
+    li The number of tasks depent on the number of images, there are only as many tasks as there are images.
+    li When the process of checking tasks finished then you are redirected to the admin homepage, where you can see your new experiment displayed.
+  h2 Getting Experiment Data
+  p In the admin homepage click on the experiment&apos;s title, this creates a table that contains the data,
+    | it also provides you with other formats to show this data (like json and csv).
+  h2 Register new Experimenter
+  ol
+    li Login
+    li On the admin homepage add /a to the url
+    li Fill in the registration form with the new experimeter&apos;s details
+    li In this version of the tool these details cannot be changed, please ensure that the new experimeter makes a note of the email address and password.

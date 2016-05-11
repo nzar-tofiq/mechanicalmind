@@ -1,0 +1,28 @@
+doctype html
+html
+  include includes/cookie_consent.html
+  head
+    title MechanicalMind
+    script(src="/js/jquery-2.0.3.min.js")
+    link(rel='stylesheet', href='/css/bootstrap-3.0.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/css/yeti.min.css')
+    link(rel='stylesheet', href='/css/main.css')
+    script(src="/css/bootstrap-3.0.2/js/bootstrap.min.js")
+    script(src='/js/jquery-ui-widget.js')
+    script(src="/js/admin.js")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+  body
+    #wrap
+      .container
+        h1.app_title
+          a(href="/")
+            img(src='/img/50x50.png')
+            span MechanicalMind
+        block page
+        block header
+          div
+            include includes/menu
+        block alert
+          div.alert.alert-warning.hidden
+        div.content
+          block content

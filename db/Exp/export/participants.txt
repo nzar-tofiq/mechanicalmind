@@ -1,0 +1,14 @@
+Experimental Reference|
+Participant Reference|
+Institution|
+Course
+Award|
+Level of Study|
+Gender|
+Age|
+Sight Related Disability|
+Date|
+Time
+
+exp1|p001|University of Brighton|BSc Internet Computing|5|m|20|None|2016-03-21|14:32
+exp1|p002|University of Brighton|BSc Digital Games Production|6|m|25|None|2016-03-22|13:12

@@ -1,0 +1,40 @@
+{
+  "name": "mechanicalmind",
+  "version": "1.0.0",
+  "description": "CMS",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "1.15.0",
+    "connect-assets": "5.1.0",
+    "connect-assets-jade": "0.1.7",
+    "errorhandler": "1.4.3",
+    "expect.js": "0.3.1",
+    "express": "4.13.4",
+    "express-session": "1.13.0",
+    "jade": "1.11.0",
+    "json2csv": "3.3.0",
+    "mocha": "2.4.5",
+    "mongoose": "4.0.1",
+    "morgan": "1.7.0",
+    "superagent": "1.7.2"
+  },
+  "scripts": {
+    "start": "app.js",
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nzar-tofiq/mechanicalmind.git"
+  },
+  "author": "Nzar Tofiq",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nzar-tofiq/mechanicalmind/issues"
+  },
+  "homepage": "https://github.com/nzar-tofiq/mechanicalmind#readme",
+  "devDependencies": {
+    "morgan": "^1.7.0",
+    "nodemon": "^1.9.1"
+  },
+  "keywords": []
+}
