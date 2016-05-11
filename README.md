@@ -5,9 +5,10 @@ Clone the project into a directory by running
 </br>
 ```$ git clone https://github.com/nzar-tofiq/mechanicalmind.git ```
 </br></br>
-Go into the newly created directory <mechanicalmind> and run npm install
-```$ cd mechanicalmind && npm install```
+Go into the newly created directory and run npm install
 </br>
+```$ cd mechanicalmind && npm install```
+</br></br>
 Install mongoDB by following the mongoDB installation instructions
 (<a href="https://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/">Windows </a>,
 <a href="https://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/"> Unix </a>)
