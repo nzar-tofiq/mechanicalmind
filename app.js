@@ -1,5 +1,4 @@
-//get this to sanitise user input or check the files at input
-//https://github.com/chriso/validator.js
+'use strict'
 var express = require('express');
 var errorHandler = require('errorhandler');
 var fs = require('fs');
@@ -7,17 +6,16 @@ var http = require('http');
 var jade = require('jade');
 var path = require('path');
 var util = require('util');
-var routes = require('./routes');
 var session = require('express-session');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var models = require('./models');
+var routes = require('./routes');
 mongoose.connect('mongodb://localhost/mm');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(data) {});
-
 var app = express();
 app.set('appName', 'mechanicalmind');
 app.set('port', process.env.PORT || 3001);

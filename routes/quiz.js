@@ -1,7 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var util = require('util');
-var uploadedData = process.cwd() + '/db/';
+var uploadedData = process.cwd() + '/db';
 var app = require('express');
 var json2csv = require('json2csv');
 
@@ -115,13 +115,13 @@ exports.create = function(req, res, next) {
  * Post postParams
  */
 exports.add = function(req, res, next) {
-  var quiz, t, tIds = [], r, ax, an, bx, bn, nn, expFile, cssText, images;
+  var quiz, i, j, t, r, ax, an, bx, bn, nn, expFile, cssText, images;
   if (!req.session.userid) return next(new Error('No slug, data or img path sent'));
 
   //get the experiment data file and sort images
-  expFile = JSON.parse(fs.readFileSync(uploadedData + req.body.pathtodata, 'utf8'));
-  cssText = fs.readFileSync(uploadedData + req.body.pathtocss);
-  images = fs.readdirSync(uploadedData + req.body.pathtoimg);
+  expFile = JSON.parse(fs.readFileSync(uploadedData + '/' + req.body.pathtodata, 'utf8'));
+  cssText = fs.readFileSync(uploadedData + '/' + req.body.pathtocss);
+  images = fs.readdirSync(uploadedData + '/' + req.body.pathtoimg);
   // sort the images
   // http://stackoverflow.com/questions/15478954/sort-array-elements-string-with-numbers-natural-sort
   function naturalCompare(a, b) {
@@ -137,8 +137,6 @@ exports.add = function(req, res, next) {
       return ax.length - bx.length;
   }
   images.sort(naturalCompare);
-  req.session.images = images;
-
   quiz = new req.models.Quiz({
     slug            : req.body.slug,
     owner_id        : req.session.userid,
@@ -150,34 +148,26 @@ exports.add = function(req, res, next) {
     timeout         : expFile.timeout,
     show_timer      : expFile.showtimer,
     randomize       : expFile.randomize,
-    quiz_record_ids : [],
-    tasks           : [],
     images          : images,
     published       : false
+  });
+  quiz.save().then(function(quiz){
+    for (i=0; i < expFile.tasks.length; i++){
+      task = new req.models.Task({
+        quiz_id   : quiz._id,
+        text      : expFile.tasks[i].text,
+        img       : '/img/' +  images[i],
+        responses : expFile.tasks[i].responses,
+        solution  : expFile.tasks[i].solution
+      })
+      task.save();
+      quiz.tasks.push(task);
+    }
   });
   quiz.save(function(err, q) {
     if (err) return next(new Error(err));
     req.session.quiz = q;
-  });
-  req.models.Quiz.findOne({_id: quiz._id}, function(err, quiz){
-    for (var i=0; i < expFile.tasks.length; i++){
-      t = new req.models.Task({
-        quiz_id   : quiz._id,
-        text      : expFile.tasks[i].text,
-        img       : '/img/' +  req.session.images[i],
-        responses : expFile.tasks[i].responses,
-        solution  : expFile.tasks[i].solution
-      });
-      t.save(function(err, task){
-        if (err) return next(new Error(err));
-      });
-      quiz.tasks[i] = t._id;
-    }
-    quiz.save(function(err, data){
-      if(err) return next(new Error(err));
-    });
-    req.session.quiz = quiz;
-    res.render('edit', {quiz: req.session.quiz})
+    res.render('edit', {quiz: q});
   });
 };
 
@@ -187,16 +177,17 @@ exports.add = function(req, res, next) {
 exports.edit = function (req, res, next) {
   if (!req.session.quiz) return next(new Error('No quiz in session.'));
   req.models.Quiz.findOne({_id: req.session.quiz._id}, function(err, quiz) {
-    quiz.tasks      = req.session.tasks;
+    debugger;
     quiz.title      = req.body.title;
     quiz.slug       = req.body.slug;
     quiz.style      = req.body.style;
-    quiz.img        = req.body.img;
+    quiz.img_path   = req.body.img;
     quiz.timer      = req.body.timer;
     quiz.show_timer = req.body.showtimer;
     quiz.randomize  = req.body.randomize;
-    quiz.save(function(err) {
+    quiz.save(function(err, q) {
       if (err) return next(new Error(err));
+      req.session.quiz = q;
       res.redirect('/quiz/edit/task/1');
     });
   });
