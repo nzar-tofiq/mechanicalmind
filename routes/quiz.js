@@ -1,3 +1,4 @@
+'use strict'
 var path = require('path');
 var fs = require('fs');
 var util = require('util');
@@ -115,7 +116,7 @@ exports.create = function(req, res, next) {
  * Post postParams
  */
 exports.add = function(req, res, next) {
-  var quiz, i, j, t, r, ax, an, bx, bn, nn, expFile, cssText, images;
+  var quiz, task, tasks = [], i, j, t, r, ax, an, bx, bn, nn, expFile, cssText, images;
   if (!req.session.userid) return next(new Error('No slug, data or img path sent'));
 
   //get the experiment data file and sort images
@@ -137,33 +138,32 @@ exports.add = function(req, res, next) {
       return ax.length - bx.length;
   }
   images.sort(naturalCompare);
-  quiz = new req.models.Quiz({
-    slug            : req.body.slug,
-    owner_id        : req.session.userid,
-    css_path        : req.body.pathtocss,
-    img_path        : req.body.pathtoimg,
-    data_path       : req.body.pathtodata,
-    title           : expFile.title,
-    style           : cssText,
-    timeout         : expFile.timeout,
-    show_timer      : expFile.showtimer,
-    randomize       : expFile.randomize,
-    images          : images,
-    published       : false
-  });
-  quiz.save().then(function(quiz){
-    for (i=0; i < expFile.tasks.length; i++){
-      task = new req.models.Task({
-        quiz_id   : quiz._id,
-        text      : expFile.tasks[i].text,
-        img       : '/img/' +  images[i],
-        responses : expFile.tasks[i].responses,
-        solution  : expFile.tasks[i].solution
-      })
-      task.save();
-      quiz.tasks.push(task);
-    }
-  });
+
+  quiz = new req.models.Quiz({});
+
+  for (i=0; i < expFile.tasks.length; i++){
+    task = new req.models.Task({});
+    task.num       = i + 1;
+    task.text      = expFile.tasks[i].text;
+    task.img       = images[i];
+    task.responses = expFile.tasks[i].responses;
+    task.solution  = expFile.tasks[i].solution;
+    task.save();
+    quiz.tasks.push(task);
+  }
+  quiz.slug       = req.body.slug;
+  quiz.owner_id   = req.session.userid;
+  quiz.css_path   = req.body.pathtocss;
+  quiz.img_path   = req.body.pathtoimg;
+  quiz.data_path  = req.body.pathtodata;
+  quiz.title      = expFile.title;
+  quiz.style      = cssText;
+  quiz.timeout    = expFile.timeout;
+  quiz.show_timer = expFile.showtimer;
+  quiz.randomize  = expFile.randomize;
+  quiz.images     = images;
+  quiz.published  = false;
+
   quiz.save(function(err, q) {
     if (err) return next(new Error(err));
     req.session.quiz = q;
@@ -176,35 +176,34 @@ exports.add = function(req, res, next) {
 */
 exports.edit = function (req, res, next) {
   if (!req.session.quiz) return next(new Error('No quiz in session.'));
-  req.models.Quiz.findOne({_id: req.session.quiz._id}, function(err, quiz) {
-    debugger;
-    quiz.title      = req.body.title;
-    quiz.slug       = req.body.slug;
-    quiz.style      = req.body.style;
-    quiz.img_path   = req.body.img;
-    quiz.timer      = req.body.timer;
-    quiz.show_timer = req.body.showtimer;
-    quiz.randomize  = req.body.randomize;
-    quiz.save(function(err, q) {
-      if (err) return next(new Error(err));
-      req.session.quiz = q;
-      res.redirect('/quiz/edit/task/1');
-    });
-  });
-}
+  req.models.Quiz.findOne({_id: req.session.quiz._id},
+    function(err, quiz) {
+      quiz.title      = req.body.title;
+      quiz.slug       = req.body.slug;
+      quiz.style      = req.body.style;
+      quiz.timer      = req.body.timer;
+      quiz.show_timer = req.body.showtimer;
+      quiz.randomize  = req.body.randomize;
+      quiz.save(function(err, q) {
+        if (err) return next(new Error(err));
+        req.session.quiz = q;
+        res.redirect('/quiz/edit/task/1');
+      });
+    }
+  );
+};
 
 /*
 * GET Task page
 */
 exports.task = function(req, res, next) {
   // http://www.summa.com/blog/avoiding-callback-hell-while-using-mongoose
+  var task;
   if(!req.session.quiz && !req.params.num) next(new Error('No slug or task number'));
   var tNth = Number(req.params.num) - 1;
-  req.models.Task.findOne({_id: req.session.quiz.tasks[tNth]},
-    function(err, t) {
-      if (err) return next(new Error(err));
-      t.num = tNth + 1;
-      res.render('task', {task:  t});
+  req.models.Quiz.findById(req.session.quiz._id, function(err, q) {
+    task = q.tasks[tNth];
+    res.render('task', {task: task})
   });
 };
 
@@ -212,7 +211,7 @@ exports.task = function(req, res, next) {
 * Serve image
 */
 exports.getImage = function(req, res, next){
-  res.sendFile(path.join(uploadedData + '/' + req.session.quiz.img_path, req.params.img));
+  res.sendFile(path.join(uploadedData + '/' +req.session.quiz.img_path, req.params.img));
 };
 
 /*

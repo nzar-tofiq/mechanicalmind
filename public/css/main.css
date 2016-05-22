@@ -43,6 +43,9 @@ td.action {
 .err {
   color: red;
 }
-.col-sm-8 img{
-  width: 15cm;
+.task img{
+  width: 100%;
+}
+.task form{
+  width: 40%;
 }
