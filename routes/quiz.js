@@ -221,15 +221,15 @@ exports.editTask = function(req, res, next) {
   var taskNum = Number(req.params.num), i;
   if(!req.session.quiz) return next(new Error('Login first'));
   if(taskNum < req.session.quiz.tasks.length){
-    req.models.Task.findOne({_id: req.session.quiz.tasks[taskNum - 1]},
-      function(err, task) {
-      if (err) return next(new Error(err));
-      task.text = req.body.text;
-      task.solution = req.body.solution;
-      for(i = 0; i < task.responses; i++){
-        task.responses[i] = req.body.i;
-      }
-      task.save(function (err, task) {
+    req.models.Quiz.findOne({_id: req.session.quiz._id},
+      function(err, q) {
+        if (err) return next(new Error(err));
+        q.tasks[taskNum - 1].text = req.body.text;
+        q.tasks[taskNum - 1].solution = req.body.solution;
+        for(i = 0; i < q.tasks[taskNum - 1].responses; i++){
+          q.tasks[taskNum - 1].responses[i] = req.body.i;
+        }
+      q.save(function (err, task) {
         if (err) return next(new Error(err));
       });
     });
