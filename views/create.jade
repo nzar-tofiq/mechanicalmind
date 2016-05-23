@@ -6,6 +6,10 @@ block content
   div.col-md-8.container.quizparams
     form(action="/quiz/create", method="POST", role="form")
       div.form-group
+        label(for="slug") Slug required as an identifier for the experiment no space or capital letters
+        input.form-control(type="text", name="slug", value="euler_diagram-exp_1",required)
+        span.help-block This will be used in the url
+      div.form-group
         label(for="pathtodata") Path to exp.json (expecting json)
         input.form-control(type="text", name="pathtodata", value="exp/experiment_1/experiment.json")
         span.help-block This is to help us find the right data to render an experiment
