@@ -1,0 +1,226 @@
+{
+	"title": "EULER DIAGRAM EXPERIMENTATION",
+	"style": "style.css",
+	"images": "img",
+	"timeout": 3000,
+	"showtimer": false,
+	"randomize": false,
+  "demographics": [
+      {
+          "name": "Institution",
+          "data": [
+              {
+                  "name": "University",
+                  "type": "text"
+              },
+              {
+                  "name": "Course",
+                  "type": "text"
+              },
+              {
+                  "name": "Level of study",
+                  "type": ["Level 4", "Level 5", "Level 6", "Level 7", "Level 8"]
+              }
+          ]
+      },
+      {
+          "name": "Participant",
+          "data": [
+              {
+                  "name": "Gender identity",
+                  "type": ["Male", "Female", "Other", "Rather not say"]
+              },
+              {
+                  "name": "Age",
+                  "type": "int"
+              },
+              {
+                  "name": "Sight based disability",
+                  "type": "text"
+              }
+          ]
+      }
+  ],
+	"tasks": [
+		{
+			"text": "Who has visited RUSSIA, IRAN and SEYCHELLES?",
+			"responses": ["Brenda", "Warren", "Faith", "Lisa", "Tracy"],
+			"solution": 3
+		},
+		{
+			"text": "Who has visited GERMANY and FINLAND but not GUINEA?",
+			"responses": ["Tate", "Tracy", "Faith", "Sandy", "Francis"],
+			"solution": 3
+		},
+		{
+			"text": "Which country has been visited by 6 people?",
+			"responses": ["BELERUS", "FINLAND", "CAPE VERDE", "HUNGARY", "INDONESIA"],
+			"solution": 2
+		},
+		{
+			"text": "Which country has been visited by 7 people?",
+			"responses": ["IRAQ", "ANDORRA", "SOUTH KOREA", "NEPAL", "FRANCE"],
+			"solution": 1
+		},
+		{
+			"text": "How many people have visited both MALAWI and SAN MARINO?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 1
+		},
+		{
+			"text": "How many people have visited both ZIMBABWE and MADIGASCAR but not TOGO?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 2
+		},
+		{
+			"text": "Which country has been visited by 10 people?",
+			"responses": ["BENIN", "ETHIOPIA", "TUNISIA", "SWAZILAND"],
+			"solution": 2
+		},
+		{
+			"text": "Which country has been visited by 9 people?",
+			"responses": ["RWANDA", "VIETNAM", "LUXEMBOURG", "SPAIN"],
+			"solution": 0
+		},
+		{
+			"text": "How many people have visited IRELAND, LITHUANIA and BURUNDI?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 2
+		},
+		{
+			"text": "How many people have visited both SYRIA and HUNGARY but neither SAUDI ARABIA?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 0
+		},
+		{
+			"text": "Who has visited LESOTHO and LIECHTENSTEIN but not SIERRA LEONE?",
+			"responses": ["Ivy", "Oliver", "Alex", "Una", "Pam"],
+			"solution": 1
+		},
+		{
+			"text": "Who has visited CHINA, PAKISTAN and ITALY but not SYRIA?",
+			"responses": ["Ian", "Ash", "Dom", "Robyn", "Peter"],
+			"solution": 2
+		},
+		{
+			"text": "How many people have visited both CAMEROON and SENEGAL but not COMOROS?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 2
+		},
+		{
+			"text": "How many people have visited both GERMANY and MAURITIUS but not PHILIPPINES?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 0
+		},
+		{
+			"text": "Who has visited both TURKEY and SWITZERLAND but not BANGLADESH?",
+			"responses": ["Mya", "Mick", "Grant", "Leo", "Danny"],
+			"solution": 3
+		},
+		{
+			"text": "Who has visited both AFGHANISTAN and CHAD but neither MALAWI nor SWEDEN?",
+			"responses": ["Alexa", "Ged", "Guy", "Joy", "Lorna"],
+			"solution": 0
+		},
+		{
+			"text": "Which country has been visited by 11 people?",
+			"responses": ["SOUTH KOREA", "MOROCCO", "EGYPT", "SLOVAKIA", "SWEDEN"],
+			"solution": 3
+		},
+		{
+			"text": "Which country has been visited by 3 people?",
+			"responses": ["GREECE", "NAMBIA", "BOTSWANA", "LIBYA", "INDIA"],
+			"solution": 4
+		},
+		{
+			"text": "Who has visited NIGERIA, MONTENEGRO and CHINA but not PORTUGAL?",
+			"responses": ["Ella", "Sky", "Coby", "Rita", "Eve"],
+			"solution": 1
+		},
+		{
+			"text": "Which country has been visited by 8 people?",
+			"responses": ["PERU", "UNITED KINGDOM", "FRANCE", "GEORGIA", "BELGIUM"],
+			"solution": 2
+		},
+		{
+			"text": "How many people have visited both SWEDEN and TOGO but not LESOTHO?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 2
+		},
+		{
+			"text": "Which country has been visited by 10 people?",
+			"responses": ["ROMANIA", "PAKISTAN", "INDIA", "LATVIA"],
+			"solution": 0
+		},
+		{
+			"text": "How many people have visited both COMOROS and GHANA but neither MALI nor CHAD?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 2
+		},
+		{
+			"text": "Who has visited both FINLAND and SIDAN but not KENYA?",
+			"responses": ["Samuel", "Ada", "Po", "Zarah", "Abdul"],
+			"solution": 1
+		},
+		{
+			"text": "How many people have visited Estonia, PAKISTAN and BULGARIA?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 0
+		},
+		{
+			"text": "Who has visited ZAMBIA, ANGOLA and SOMALIA?",
+			"responses": ["Ade", "Eva", "Tyler", "Gary", "Faith"],
+			"solution": 4
+		},
+		{
+			"text": "Which country has been visited by 9 people?",
+			"responses": ["IRELAND", "MALTA", "COMOROS", "ESTONIA", "GAMBIA"],
+			"solution": 3
+		},
+		{
+			"text": "Who has visited SYRIA, YEMEN and MALAYASIA but not QATAR?",
+			"responses": ["Betty", "Colin", "Lars", "Evelyn", "Kylie"],
+			"solution": 1
+		},
+		{
+			"text": "Which country has been visited by 9 people?",
+			"responses": ["RWANDA", "SPAIN", "CHAD", "IRELAND", "HUNGARY"],
+			"solution": 2
+		},
+		{
+			"text": "How many people have visited both SOMALIA and ANGOLA but neither LATVIA, CAMEROON nor MALTA?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 4
+		},
+		{
+			"text": "Which country has been visited by 9 people?",
+			"responses": ["GREECE", "IRAQ", "SLOVENIA", "FRANCE"],
+			"solution": 3
+		},
+		{
+			"text": "How many people have visited both GREECE and MALI but neither INDIA nor IRAQ?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 3
+		},
+		{
+			"text": "Who has visited SEYCHELLES, CHINA and INDIA but neither PORTUGAL nor IRAN?",
+			"responses": ["Elliott", "Bert", "Saul", "Jade", "Ivor"],
+			"solution": 2
+		},
+		{
+			"text": "How many people have visited both UKRAINE and NORWAY but neither NEPAL nor SAUDI ARABIA?",
+			"responses": ["0", "1", "2", "3", "4"],
+			"solution": 1
+		},
+		{
+			"text": "Who has visited GHANA, GAMBIA and POLAND?",
+			"responses": ["Joss", "Ged", "Guy", "Joy", "Lorna"],
+			"solution": 0
+		},
+		{
+			"text": "Which country has been visited by 10 people?",
+			"responses": ["TURKEY", "RWANDA", "THAILAND", "GREECE", "MAURITIUS"],
+			"solution": 0
+		}
+	]
+}

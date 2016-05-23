@@ -1,0 +1,13 @@
+extends layout
+block page 
+  - var menu = 'index'
+block content
+  div= err
+  h2 Choose an Experiment
+  if (!quizes || quizes.length < 1)
+    p No Experiments to display!
+  else
+    ul.list-group
+      each quiz, index in quizes
+        li.list-group-item
+          a(href="/participant/register/#{quiz._id}")= quiz.title

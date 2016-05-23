@@ -1,0 +1,28 @@
+extends ../layout
+block page
+  - var menu = 'data'
+block content
+  div= err
+  if (!quiz || quiz.tasks < 0)
+    p Nothing to display
+  else
+    ul.list-group
+      li.list-group-item.col-md-4
+        a(href="/data/#{quiz._id}/json") In Json format
+      li.list-group-item.col-md-4
+        a(href="/data/#{quiz._id}/csv") In CSV format
+      br
+      br
+    div= quiz.tasks
+    table.table.table-stripped
+      thead
+        each task in quiz.tasks
+          th
+            each record in task.records
+              td= record.participant_id
+      tbody
+        each task in quiz.tasks
+          tr
+            td.col-md-2 Task #{task.num}
+            each record in task.records
+              td= record.answer

@@ -1,0 +1,26 @@
+extends layout
+block page
+  - var menu = 'admin'
+block content
+  div.err= err
+  div.container.admin
+    if (!quizes || quizes.length === 0 )
+      p
+        | Nothing to display. 
+        a(href="/quiz/create") Create one
+        |.
+    else
+      table.table.table-stripped
+        thead
+          tr
+            th(colspan="2") Actions
+            th Experiment Title
+        tbody
+          each quiz, index in quizes
+            tr(data-id="#{quiz._id}", class=(!quiz.published)?'unpublished':'')
+              td.action
+                button.btn.btn-danger.btn-sm.remove(type="button")
+                  span(title="Remove") Delete
+              td.action
+              td.title
+                a(href="/data/#{quiz._id}")=quiz.title

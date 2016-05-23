@@ -1,0 +1,25 @@
+extends layout
+block page
+  - var menu = "quizparams"
+block content
+  div= err
+  div.col-md-8.container.quizparams
+    form(action="/quiz/edit", method="POST", role="form")
+      div.form-group
+        label(for="slug") Slug required as an identifier for the experiment no space or capital letters
+        input.form-control(type="text", name="slug", value="euler_diagram-exp",required)
+        span.help-block This will be used in the url
+      div.form-group
+        label(for="pathtodata") Path to exp.json (expecting json)
+        input.form-control(type="text", name="pathtodata", value="Exp/experiment/experiment.json")
+        span.help-block This is to help us find the right data to render an experiment
+      div.form-group
+        label(for="pathtocss") Path to style file if there is one
+        input.form-control(name="pathtocss", type="text", value="Exp/experiment/style.css")
+        span.help-block This is to help us find the right style to apply
+      div.form-group
+        label(for="pathtoimg") Images directory
+        input.form-control(name="pathtoimg", type="text", value="Exp/experiment/img")
+        span.help-block This is to help us find the right images
+      p
+        button.btn.btn-primary(type="submit") Submit
