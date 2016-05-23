@@ -6,7 +6,8 @@ var taskSchema = new mongoose.Schema(
     text     : String,
     img      : String,
     responses: [String],
-    solution : Number
+    solution : Number,
+    records : Array
   }
 );
 

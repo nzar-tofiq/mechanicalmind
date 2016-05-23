@@ -80,28 +80,15 @@ exports.jsonData = function(req, res, next){
 * Get quiz data
 */
 exports.data = function(req, res, next) {
-  if(!req.params.slug) return next(new Error('No Quiz selected'))
-  var data, i, j;
-  req.models.Quiz.findOne({slug: req.params.slug}, function(err, q) {
-    req.models.QuizRecord.find({quiz_id: q._id}, function(err, qrec) {
-      if(err) return next(new Error(err));
-      data = {name: 'Participants/Answers'};
-      data.participants = [];
-      for(i = 0; i < qrec.length; i++){
-        participant = {name : qrec[i].participant_id}
-        participant.tasks = [];
-        for(j=0; j< qrec[i].task_record.length; j++){
-          task = {name : 'Task ' + Number(j+1)}
-          task = qrec[i].task_record[j];
-          participant.tasks.push(task);
-        }
-        data.participants.push(participant);
-      };
-      data.tasks = [];
-      req.session.quiz = q;
-      req.session.data = data;
-      res.render('data/table', {data: data, quiz: q});
-    });
+  var i, tasks = [];
+  req.models.Quiz.findById(req.params.id, function(err, q) {
+    for(i = 0; i < q.tasks.length; i++){
+      req.models.Task.findById(q.tasks[i]._id, function(err, task) {
+        tasks[i] = task;
+      })
+    }
+    console.log(tasks);
+    res.render('data/table', {quiz: q});
   });
 }
 
@@ -142,12 +129,13 @@ exports.add = function(req, res, next) {
   quiz = new req.models.Quiz({});
 
   for (i=0; i < expFile.tasks.length; i++){
-    task = new req.models.Task({});
-    task.num       = i + 1;
-    task.text      = expFile.tasks[i].text;
-    task.img       = images[i];
-    task.responses = expFile.tasks[i].responses;
-    task.solution  = expFile.tasks[i].solution;
+    task = new req.models.Task({
+      num       : i + 1,
+      text      : expFile.tasks[i].text,
+      img       : images[i],
+      responses : expFile.tasks[i].responses,
+      solution  : expFile.tasks[i].solution
+    });
     task.save();
     quiz.tasks.push(task);
   }

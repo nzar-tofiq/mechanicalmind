@@ -21,4 +21,4 @@ var participantSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('Participant', participantSchema)
+module.exports = mongoose.model('Participant', participantSchema, 'Participant')

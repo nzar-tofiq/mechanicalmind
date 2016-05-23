@@ -1,0 +1,31 @@
+extends ../layout
+block page
+  - var menu = 'register'
+block content
+    div= err
+    h2.col-md-offset-2 Register
+    div
+      form.form-inline(action="/participant/register", method="POST")
+        p
+          label.col-md-2(for="institution") Institution
+          input.form-control(name="institution", type="text", required="required", value="University of Brighton")
+        p
+          label.col-md-2(for="course") Course
+          input.form-control(name="course", type="text", required="required", value="Software Engineering")
+        p
+          label.col-md-2(for="award") Award
+          input.form-control(name="award", type="text", required="required", value="BA(Hons)")
+        p
+          label.col-md-2(for="level") Level
+          input.form-control(name="level", type="number", required="required", value="5")
+        p
+          label.col-md-2(for="gender") Gender
+          input.form-control(name="gender", type="text", required="required", value="M")
+        p
+          label.col-md-2(for="age") Age
+          input.form-control(name="age", type="number", required="required", value="23")
+        p
+          label.col-md-2(for="disability") Sight related disability
+          input.form-control(name="disability", type="textarea", placeholder="if none: leave blank")
+        p
+          button.btn.btn-lg-primary.col-md-4.col-md-offset-1(type="submit") Start

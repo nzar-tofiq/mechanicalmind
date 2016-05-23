@@ -3,26 +3,25 @@ block page
   - var menu = 'data'
 block content
   div= err
-    if (!data || data < 0)
-      p Nothing to display
-    else
-      ul.list-group
-        li.list-group-item.col-md-4
-          a(href="/data/#{quiz.slug}/json") In Json format
-        li.list-group-item.col-md-4
-          a(href="/data/#{quiz.slug}/csv") In CSV format
-        br
-        br
-      div= data.tasks
-      table.table.table-stripped
-        thead
-          each task, i in data.tasks
-            th= task
-              
-                
-        tbody
-          each participant, j in data.participants
-            tr
-              td= participant.name
-              each task, k in participant.tasks
-                td= task.response
+  if (!quiz || quiz.tasks < 0)
+    p Nothing to display
+  else
+    ul.list-group
+      li.list-group-item.col-md-4
+        a(href="/data/#{quiz._id}/json") In Json format
+      li.list-group-item.col-md-4
+        a(href="/data/#{quiz._id}/csv") In CSV format
+      br
+      br
+    div= quiz.tasks
+    table.table.table-stripped
+      thead
+        each task in quiz.tasks
+          each record in task
+            th= record.participant_id
+      tbody
+        each task in quiz.tasks
+          tr
+            td Task #{task.num}
+            each record in task.records
+              td= record.answer

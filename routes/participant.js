@@ -1,3 +1,4 @@
+'use strict'
 /*
  * GET Participant listing.
  */
@@ -12,16 +13,10 @@ exports.list = function(req, res){
 * GET Participant registration form
 */
 exports.register = function(req, res, next){
-  if(!req.params.slug) return next(new Error('No Experiment selected'));
-  req.models.Quiz.findOne({slug : req.params.slug}, function(err, quiz){
+  req.models.Quiz.findOne({'_id' : req.params.id}, function(err, q){
     if(err) return next(new Error(err));
-    req.session.quiz = quiz;
-  }).exec().then(function(quiz){
-    req.models.Task.find({quiz_id: quiz._id}, function(err, ts) {
-    }).exec().then(function(ts) {
-      req.session.quiz.tasks = ts;
-      res.render('register', {quiz: req.session.quiz});
-    });
+    req.session.quiz = q;
+    res.render('participant/register');
   });
 };
 
@@ -29,58 +24,49 @@ exports.register = function(req, res, next){
  * Post Register route.
  */
 exports.add = function(req, res, next) {
-  var participant, arr, i;
-  participant = new req.models.Participant({
-    institution             : {
-      university            : req.body.institution,
-      course                : req.body.course,
-      award                 : req.body.award,
-      level                 : req.body.level
-    },
-    gender                  : req.body.gender,
-    age                     : req.body.age,
-    disability              : req.body.disability
-  });
+  var participant, tasks, i;
+  participant = new req.models.Participant({});
+  participant.institution  = {
+    university : req.body.institution,
+    course     : req.body.course,
+    award      : req.body.award,
+    level      : req.body.level
+  };
+  participant.gender       = req.body.gender;
+  participant.age          = req.body.age;
+  participant.disability   = req.body.disability;
+
   participant.save(function(err, p) {
     if (err) return next(new Error(err));
     return p;
   }).then(function (p) {
     req.session.participant = p;
     if(req.session.quiz.randomize){
-      arr = req.session.quiz.tasks;
-      for (i = 0; i < arr.length; i++) {
+      tasks = req.session.quiz.tasks;
+      for (i = 0; i < tasks.length; i++) {
         var j = Math.floor(Math.random() * (i + 1));
-        var temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
-      }
-      req.session.quiz.tasks = arr;
-    }
-  }).then(function() {
-    var quiz_record = new req.models.QuizRecord({
-      quiz_id : req.session.quiz._id,
-      participant_id : req.session.participant._id
-    });
-    quiz_record.save(function(err) {
-      if (err) return next(new Error(err))
-    })
-    res.redirect('/exp/' + req.session.quiz.slug + '/task/1');
-  })
+        var temp = tasks[i];
+        tasks[i] = tasks[j];
+        tasks[j] = temp;
+      };
+      req.session.quiz.tasks = tasks;
+    };
+    res.redirect('/participant/task/1');
+  });
 };
 
 /*
  * GET Participant task route.
  */
 exports.task =  function(req, res, next){
-  var quiz, slug, num, response;
-  if(!req.session.quiz || !req.params.slug) return next(new Error('Session is lost'));
+  var quiz, num, response;
+  if(!req.session.quiz) return next(new Error('Session is lost'));
   quiz = req.session.quiz;
   if(!req.params.num) return next(new Error('No task selected'));
   num = Number(req.params.num);
-  if(num <= req.session.quiz.tasks.length){
-    res.render('quiz/task', {quiz: req.session.quiz, task: req.session.quiz.tasks[num - 1], num: num});
-  }
-  else {
+  if(num < req.session.quiz.tasks.length){
+    res.render('participant/task', {task: req.session.quiz.tasks[num - 1], num: num, quiz: req.session.quiz});
+  } else {
     res.redirect('/');
   }
 };
@@ -89,39 +75,26 @@ exports.task =  function(req, res, next){
  * GET Answer route
  */
 exports.answer = function(req, res, next) {
-  var response, num;
+  var tNum, taskNumber, taskRecord, task, quiz, taskNum;
   if(!req.params.res) return next(new Error('No Answer selected'));
   if(!req.params.num) return next(new Error('No task selected'));
   if(!req.session.quiz) return next(new Error('Session lost'));
-  num = Number(req.params.num);
-  response = Number(req.params.res);
-  if(req.params.res !== 'timedout'){
-    req.models.QuizRecord.findOne({quiz_id: req.session.quiz._id, participant_id: req.session.participant._id},
-    function(err, quizRecord) {
-      if (err) return next(new Error(err));
-      quizRecord.task_record.push({
-        task_id        : req.session.quiz.tasks[num - 1]._id,
-        response       : req.session.quiz.tasks[num - 1].responses[Number(response)],
-        response_num   : Number(response) + 1
-      });
-      quizRecord.save(function(err) {
-        if (err) return next(new Error(err));
-      })
-      res.redirect('/exp/' + req.session.quiz.slug + '/task/' + (num + 1));
-    });
-  } else {
-    req.models.QuizRecord.findOne({quiz_id: req.session.quiz._id, participant_id: req.session.participant._id},
-    function(err, quizRecord) {
-      if (err) return next(new Error(err));
-      quizRecord.task_record.push({
-        task_id        : req.session.quiz.tasks[num - 1]._id,
-        response       : 'Timed Out',
-        response_num   : -1
-      });
-      quizRecord.save(function(err) {
-        if (err) return next(new Error(err));
+  tNum = Number(req.params.num) - 1;
+  taskRecord = new req.models.TaskRecord({
+    participant_id : req.session.participant._id,
+    answer : req.params.res
+  });
+  taskRecord.save();
+  req.models.Task.findOne({'_id': req.session.quiz.tasks[tNum]._id}, function(err, t) {
+    t.records.push(taskRecord);
+    t.save();
+    taskNumber = t.num - 1;
+    req.models.Quiz.findById(req.session.quiz._id, function(err, q) {
+      q.tasks[taskNumber] = t;
+      q.save(function(err, doc) {
+        console.log(doc.tasks[taskNumber]);
+        res.redirect('/participant/task/' + Number(tNum + 2));
       });
     });
-    res.redirect('/exp/' + req.session.quiz.slug + '/task/' + (num + 1));
-  }
+  });
 };

@@ -2,19 +2,19 @@ extends ../layout
 block page
   - var menu = 'task'
 block content
-  if(!task || !quiz || !num)
+  if(!task || !quiz ||!num)
     div.err= err
   else
     style quiz.style
     div.container#container
       div.row
         div.col-sm-8#img
-          img(src="#{task.img}")
+          img(src="/img/#{task.img}")
         div.col-sm-4#question
           h2= task.text
           div.list-group#responses
             each response, index in task.responses
-              a.list-group-item.btn-block#response(href="/exp/#{quiz.slug}/task/#{num}/response/#{index}")= response
+              a.list-group-item.btn-block#response(href="/participant/task/#{num}/#{response}")= response
           h3.timer
     script.
       var timeout = #{quiz.timeout};
@@ -31,7 +31,6 @@ block content
       }
       function redirect() {
         clearInterval(timer);
-        window.location.href = '/exp/#{quiz.slug}/task/#{num}/response/timedout';
+        window.location.href = '/participant/task/#{num}/timedout';
       }
       setTimeout(redirect, timing);
-    

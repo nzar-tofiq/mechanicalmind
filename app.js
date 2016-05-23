@@ -33,10 +33,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Modells middleware
 app.use(function(req, res, next) {
-  if (!models.User) return next(new Error("No User models."));
-  if (!models.Quiz) return next(new Error("No Quiz models"));
-  if (!models.Participant) return next(new Error("No Participant models"));
-  if (!models.Task) return next(new Error("No Task models"));
+  if (!models.User) return next(new Error('No User models.'));
+  if (!models.Quiz) return next(new Error('No Quiz models'));
+  if (!models.Participant) return next(new Error('No Participant models'));
+  if (!models.Task) return next(new Error('No Task models'));
+  if (!models.TaskRecord) return next(new Error('No quiz records'))
 
   req.models = models;
   return next();
@@ -58,8 +59,13 @@ app.use(session({
 }));
 
 app.use(function(req, res, next) {
-  if (req.session && req.session.admin)
-    res.locals.admin = true;
+  if (req.session) {
+    if(req.session.admin) {
+      res.locals.admin = true;
+    } else if (req.session.participant) {
+      res.locals.participant = true;
+    }
+  }
   next();
 });
 
@@ -76,10 +82,10 @@ var authorize = function(req, res, next) {
 app.get('/', routes.quiz.getquizes);
 app.get('/login', routes.user.login);
 app.get('/logout', routes.user.logout);
-app.get('/exp/:slug/participant', routes.participant.register);
-app.post('/exp/:slug/register', routes.participant.add);
-app.get('/exp/:slug/task/:num', routes.participant.task);
-app.get('/exp/:slug/task/:num/response/:res', routes.participant.answer)
+app.get('/participant/register/:id', routes.participant.register);
+app.post('/participant/register', routes.participant.add);
+app.get('/participant/task/:num', routes.participant.task);
+app.get('/participant/task/:num/:res', routes.participant.answer)
 app.post('/login', routes.user.authenticate);
 app.get('/admin', authorize, routes.quiz.admin);
 app.get('/quiz/create', authorize, routes.quiz.create);
@@ -87,9 +93,9 @@ app.post('/quiz/create', authorize, routes.quiz.add);
 app.post('/quiz/edit', authorize, routes.quiz.edit)
 app.get('/quiz/edit/task/:num', authorize, routes.quiz.task);
 app.post('/quiz/edit/task/:num', authorize, routes.quiz.editTask);
-app.get('/data/:slug', authorize, routes.quiz.data);
-app.get('/data/:slug/json', authorize, routes.quiz.jsonData);
-app.get('/data/:slug/csv', authorize, routes.quiz.csvData);
+app.get('/data/:id', authorize, routes.quiz.data);
+app.get('/data/:id/json', authorize, routes.quiz.jsonData);
+app.get('/data/:id/csv', authorize, routes.quiz.csvData);
 app.get('/img/:img', routes.quiz.getImage);
 app.get('/help', function(req, res, next) {
   if (req.session.userid && req.session.admin){
@@ -98,8 +104,8 @@ app.get('/help', function(req, res, next) {
     res.render('help/participant');
   }
 });
-app.get('/admin/a', authorize, routes.user.register);
-app.post('/a', authorize, routes.user.add);
+app.get('/admin/a', routes.user.register);
+app.post('/a', routes.user.add);
 // app.get('/users', authorize, routes.user.list);
 // app.get('/uploadfile', authorize, routes.quiz.uploadfile);
 // app.get('/revise', authorize, routes.quiz.getrevise);

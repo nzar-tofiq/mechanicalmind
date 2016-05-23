@@ -10,4 +10,4 @@ block content
     ul.list-group
       each quiz, index in quizes
         li.list-group-item
-          a(href="/exp/#{quiz.slug}/participant")= quiz.title
+          a(href="/participant/register/#{quiz._id}")= quiz.title
