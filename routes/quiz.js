@@ -10,30 +10,17 @@ var json2csv = require('json2csv');
 * GET data in csv format
 */
 exports.csvData = function(req, res, next){
-  if(!req.params.slug) return next(new Error('No Quiz selected'))
-  var data, i, j, k;
-  req.models.Quiz.findOne({slug: req.params.slug}, function(err, q) {
-    req.models.QuizRecord.find({quiz_id: q._id}, function(err, qrec) {
-      if(err) return next(new Error(err));
-      data = {name: 'Participants/Answers'};
-      data.participants = [];
-      for(i = 0; i < qrec.length; i++){
-        participant = {name : qrec[i].participant_id}
-        participant.tasks = [];
-        for(j=0; j< qrec[i].task_record.length; j++){
-          task = {name : 'Task ' + Number(j+1)}
-          task = qrec[i].task_record[j];
-          participant.tasks.push(task);
-        }
-        data.participants.push(participant);
-      };
-      data.tasks = [];
-      for(k = 0; k > q.tasks.length; k++){
-        t = 'Task ' + Number(k+1)
-        data.tasks.push(t)
-      }
-      req.session.quiz = q;
-      req.session.data = data;
+  var i;
+  req.models.Quiz.findById(req.params.id, function(err, q) {
+    for(i = 0; i < q.tasks.length; i++){
+      req.models.Task.findById(q.tasks[i]._id, function(err, t) {
+        if(err) return next(new Error(err))
+        q.tasks[i] = t;
+        q.save();
+      });
+    };
+    q.save(function(err, data) {
+      if(err) return next(new Error(err))
       json2csv({Experiment: q, data: data}, function(err, csv) {
         if(err) return next(new Error(err));
         res.send(csv)
@@ -46,30 +33,17 @@ exports.csvData = function(req, res, next){
 * GET data in JSON format
 */
 exports.jsonData = function(req, res, next){
-  if(!req.params.slug) return next(new Error('No Quiz selected'))
-  var data, i, j, k;
-  req.models.Quiz.findOne({slug: req.params.slug}, function(err, q) {
-    req.models.QuizRecord.find({quiz_id: q._id}, function(err, qrec) {
-      if(err) return next(new Error(err));
-      data = {name: 'Participants/Answers'};
-      data.participants = [];
-      for(i = 0; i < qrec.length; i++){
-        participant = {name : qrec[i].participant_id}
-        participant.tasks = [];
-        for(j=0; j< qrec[i].task_record.length; j++){
-          task = {name : 'Task ' + Number(j+1)}
-          task = qrec[i].task_record[j];
-          participant.tasks.push(task);
-        }
-        data.participants.push(participant);
-      };
-      data.tasks = [];
-      for(k = 0; k > q.tasks.length; k++){
-        t = 'Task ' + Number(k+1)
-        data.tasks.push(t)
-      }
-      req.session.quiz = q;
-      req.session.data = data;
+  var i;
+  req.models.Quiz.findById(req.params.id, function(err, q) {
+    for(i = 0; i < q.tasks.length; i++){
+      req.models.Task.findById(q.tasks[i]._id, function(err, t) {
+        if(err) return next(new Error(err))
+        q.tasks[i] = t;
+        q.save();
+      });
+    };
+    q.save(function(err, data) {
+      if(err) return next(new Error(err))
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({Experiment: q, data: data}));
     });
@@ -80,15 +54,20 @@ exports.jsonData = function(req, res, next){
 * Get quiz data
 */
 exports.data = function(req, res, next) {
-  var i, tasks = [];
+  var i;
   req.models.Quiz.findById(req.params.id, function(err, q) {
     for(i = 0; i < q.tasks.length; i++){
-      req.models.Task.findById(q.tasks[i]._id, function(err, task) {
-        tasks[i] = task;
+      req.models.Task.findById(q.tasks[i]._id, function(err, t) {
+        if(err) return next(new Error(err))
+        q.tasks[i] = t;
+        q.save();
       })
-    }
-    console.log(tasks);
-    res.render('data/table', {quiz: q});
+    };
+    console.log(q.tasks);
+    q.save(function(err, data) {
+      if(err) return next(new Error(err))
+      res.render('data/table', {quiz: data});
+    });
   });
 }
 
